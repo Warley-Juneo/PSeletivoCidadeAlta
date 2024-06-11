@@ -46,8 +46,8 @@ export class EmblemsService {
     return new EmblemResponseDto(result);
   }
 
-  async remove(id: number): Promise<EmblemResponseDto> {
-    const result = await this.emblemsRepository.remove(id);
+  async remove(slug: string): Promise<EmblemResponseDto> {
+    const result = await this.emblemsRepository.remove(slug);
     return new EmblemResponseDto(result);
   }
 }

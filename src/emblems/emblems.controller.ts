@@ -108,8 +108,8 @@ export class EmblemsController {
       $ref: getSchemaPath(EmblemResponseDto),
     },
   })
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.emblemsService.remove(+id);
+  @Delete(':slug')
+  remove(@Param('slug') slug: string) {
+    return this.emblemsService.remove(slug);
   }
 }

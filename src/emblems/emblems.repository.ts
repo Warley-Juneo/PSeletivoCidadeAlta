@@ -47,9 +47,9 @@ export class EmblemsRepository {
     });
   }
 
-  async remove(id: number) {
+  async remove(slug: string) {
     return this.prisma.emblem.update({
-      where: { id },
+      where: { slug },
       data: {
         is_active: false,
         deletedAt: new Date(),

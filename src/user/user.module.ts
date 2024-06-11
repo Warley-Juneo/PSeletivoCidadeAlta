@@ -5,6 +5,8 @@ import { PrismaService } from 'src/database/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
 import { JwtHelper } from 'src/helpers/jwt.service';
+import { EmblemsService } from 'src/emblems/emblems.service';
+import { EmblemsRepository } from 'src/emblems/emblems.repository';
 
 @Module({
   imports: [
@@ -14,6 +16,13 @@ import { JwtHelper } from 'src/helpers/jwt.service';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService, PrismaService, UserRepository, JwtHelper],
+  providers: [
+    UserService,
+    PrismaService,
+    UserRepository,
+    JwtHelper,
+    EmblemsService,
+    EmblemsRepository,
+  ],
 })
 export class UserModule {}

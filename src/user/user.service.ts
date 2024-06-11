@@ -1,20 +1,23 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CreateUserDto,
+  GetEmblemDto,
   LoginUserDto,
   LoginUserResponseDto,
   UserResponseDto,
-} from './dto/create-user.dto';
+} from './dto/user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserRepository } from './user.repository';
 import { JwtHelper } from 'src/helpers/jwt.service';
+import { EmblemsService } from 'src/emblems/emblems.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwthelper: JwtHelper,
+    private readonly emblemService: EmblemsService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
@@ -63,6 +66,26 @@ export class UserService {
 
   async remove(email: string): Promise<UserResponseDto> {
     const result = await this.userRepository.remove(email);
+    return new UserResponseDto(result);
+  }
+
+  async addEmblemToUser(data: GetEmblemDto): Promise<UserResponseDto | void> {
+    const user = await this.findOne(data.user_email);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const emblem = await this.emblemService.findOne(data.emblem_slug);
+    if (!emblem) {
+      throw new BadRequestException('Emblem not found');
+    }
+
+    const result = await this.userRepository.addEmblemToUser(
+      data.user_email,
+      data.emblem_slug,
+    );
+
+    console.log(result);
     return new UserResponseDto(result);
   }
 }

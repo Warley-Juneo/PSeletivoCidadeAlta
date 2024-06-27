@@ -70,22 +70,19 @@ export class UserService {
   }
 
   async addEmblemToUser(data: GetEmblemDto): Promise<UserResponseDto | void> {
-    const user = await this.findOne(data.user_email);
-    if (!user) {
-      throw new BadRequestException('User not found');
+    try {
+      await this.findOne(data.user_email);
+
+      await this.emblemService.findOne(data.emblem_slug);
+
+      const result = await this.userRepository.addEmblemToUser(
+        data.user_email,
+        data.emblem_slug,
+      );
+
+      return new UserResponseDto(result);
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
-
-    const emblem = await this.emblemService.findOne(data.emblem_slug);
-    if (!emblem) {
-      throw new BadRequestException('Emblem not found');
-    }
-
-    const result = await this.userRepository.addEmblemToUser(
-      data.user_email,
-      data.emblem_slug,
-    );
-
-    console.log(result);
-    return new UserResponseDto(result);
   }
 }

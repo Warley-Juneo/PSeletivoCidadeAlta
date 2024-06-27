@@ -52,5 +52,6 @@ deixei o sqlite para facilitar a avaliação.
   - Todos os extras
   - Validação dados json
   - Middleware
-  - Docker
+  - Docker ( não to conseguindo rodar a seed sem dar error, sem tempo para corrijir o problema )
   - Tratamento de exceções
+  - Criptografia de senhas

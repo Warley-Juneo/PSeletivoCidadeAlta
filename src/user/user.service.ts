@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import {
   CreateUserDto,
   GetEmblemDto,
@@ -11,6 +11,7 @@ import { User } from './entities/user.entity';
 import { UserRepository } from './user.repository';
 import { JwtHelper } from 'src/helpers/jwt.service';
 import { EmblemsService } from 'src/emblems/emblems.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -22,16 +23,22 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     const user_obj = new User(createUserDto);
-    const result = await this.userRepository.create(user_obj);
-    return new UserResponseDto(result);
+    const saltOrRound = 8;
+    user_obj.password = bcrypt.hashSync(user_obj.password, saltOrRound);
+    try {
+      const result = await this.userRepository.create(user_obj);
+      return new UserResponseDto(result);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async login(login: LoginUserDto): Promise<LoginUserResponseDto> {
     try {
-      const result = await this.userRepository.login(
-        login.email,
-        login.password,
-      );
+      const result = await this.userRepository.login(login.email);
+      if (!(await bcrypt.compare(login.password, result.password))) {
+        throw new UnauthorizedException('Password incorrect');
+      }
 
       const data = { email: result.email, id: result.id.toString() };
       const jwt_token = await this.jwthelper.jwtSign(data);

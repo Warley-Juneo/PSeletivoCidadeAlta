@@ -13,15 +13,12 @@ export class UserRepository {
 
     return await this.prisma.user.create({
       data: dataWithoutIdandEmblems,
-      include: {
-        emblems: true,
-      },
     });
   }
 
-  async login(email: string, password: string): Promise<User> {
+  async login(email: string): Promise<User> {
     return await this.prisma.user.findUniqueOrThrow({
-      where: { email, password },
+      where: { email },
       include: {
         emblems: true,
       },

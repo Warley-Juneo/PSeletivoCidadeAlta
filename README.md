@@ -13,7 +13,12 @@ $ npm install
 ```
 
 ## First Steps
-  - Use ```npm run seed``` para gerar os emblemas que nos foram dados no teste.
+  - crie um .env na raiz do projeto e cole essas duas variaveis. 
+  DATABASE_URL="file:./dev.db"
+  JWT_SECRET="my_secret_jwt"
+
+  - Use ```npx prisma migrate dev``` confirme tudo e depois rode ```npm run seed``` para gerar os emblemas que nos foram dados no teste.
+  
   - Em http://127.0.0.1:3000/api#/ você irá precisar criar um usuario e fazer login para receber o token para usar nas outras rotas.
 
 ## Para rodar o app
